@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "iwdg.h"
 #include "usb_device.h"
 #include "gpio.h"
 
@@ -87,6 +88,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -116,6 +118,13 @@ void SystemClock_Config(void)
 
    /* Wait till HSE is ready */
   while(LL_RCC_HSE_IsReady() != 1)
+  {
+
+  }
+  LL_RCC_LSI_Enable();
+
+   /* Wait till LSI is ready */
+  while(LL_RCC_LSI_IsReady() != 1)
   {
 
   }
