@@ -97,6 +97,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    LL_IWDG_ReloadCounter(IWDG);
+    if(LL_GPIO_IsInputPinSet(BUT_GPIO_Port, BUT_Pin))
+    {
+      LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
+    }
+    else
+    {
+      LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
+    }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
