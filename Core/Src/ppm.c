@@ -59,28 +59,31 @@ void PPM_TimeoutHandler()
     return;
   }
 
-
   PPM_NEW_DATA = true;
   CURRENT_CHANNEL = NUM_CHANNELS;
 }
 
 uint32_t PPM_PulseHandler(uint32_t pulse_width)
 {
-  uint32_t time = pulse_width;
-
-  if (time > TIME_OLD)
+  if (CURRENT_CHANNEL == NUM_CHANNELS)
   {
-    time = time - TIME_OLD;
+    // Handling first pulse
+    CURRENT_CHANNEL = 0;
   }
   else
   {
-    time = time + (TIMER_MAX - TIME_OLD) + 1;
-  }
+    // Handling subsequent pulses
+    uint32_t time = pulse_width;
 
-  TIME_OLD = pulse_width;
+    if (time > TIME_OLD)
+    {
+      time = time - TIME_OLD;
+    }
+    else
+    {
+      time = time + (TIMER_MAX - TIME_OLD) + 1;
+    }
 
-  if (CURRENT_CHANNEL != NUM_CHANNELS)
-  {
     ppm[CURRENT_CHANNEL] = time;
 
     if (CURRENT_CHANNEL < (NUM_CHANNELS - 1))
@@ -88,10 +91,8 @@ uint32_t PPM_PulseHandler(uint32_t pulse_width)
       ++CURRENT_CHANNEL;
     }
   }
-  else
-  {
-    CURRENT_CHANNEL = 0;
-  }
+
+  TIME_OLD = pulse_width;
 
   return pulse_width + TIMEOUT_INTERVAL;
 }
