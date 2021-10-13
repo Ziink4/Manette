@@ -23,7 +23,7 @@ extern volatile bool PPM_NEW_DATA;
   */
 void PPM_Init(uint32_t timer_freq);
 
-uint8_t PPM_GetChannel(unsigned int channel);
+uint8_t PPM_GetChannel(uint8_t channel);
 
 /// Handles PPM timer overflow interrupt
 void PPM_TimeoutHandler();

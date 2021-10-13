@@ -22,15 +22,16 @@ const uint32_t TIMER_MAX = 0xFFFF;
 
 void PPM_Init(uint32_t timer_freq)
 {
-  PPM_NEW_DATA = 0;
-  CURRENT_CHANNEL = -1;
+  CURRENT_CHANNEL = NUM_CHANNELS;
+  PPM_NEW_DATA = true;
+  TIME_OLD = 0;
 
   MINIMAL_INTERVAL = (1 * timer_freq / 1000); // Stick min position
   MAXIMAL_INTERVAL = (2 * timer_freq / 1000); // Stick max position
   TIMEOUT_INTERVAL = (3 * timer_freq / 1000); // Timeout
 }
 
-unsigned char PPM_GetChannel(unsigned int channel)
+uint8_t PPM_GetChannel(uint8_t channel)
 {
   uint32_t t = ppm[channel];
 
@@ -48,17 +49,19 @@ unsigned char PPM_GetChannel(unsigned int channel)
     t = 255;
   }
 
-  return ((unsigned char)t);
+  return ((uint8_t)t);
 }
 
 void PPM_TimeoutHandler()
 {
-  if (CURRENT_CHANNEL != -1)
+  if (CURRENT_CHANNEL == NUM_CHANNELS)
   {
-    PPM_NEW_DATA = 1;
+    return;
   }
 
-  CURRENT_CHANNEL = -1;
+
+  PPM_NEW_DATA = true;
+  CURRENT_CHANNEL = NUM_CHANNELS;
 }
 
 uint32_t PPM_PulseHandler(uint32_t pulse_width)
@@ -76,12 +79,19 @@ uint32_t PPM_PulseHandler(uint32_t pulse_width)
 
   TIME_OLD = pulse_width;
 
-  if (CURRENT_CHANNEL >= 0 && CURRENT_CHANNEL < NUM_CHANNELS)
+  if (CURRENT_CHANNEL != NUM_CHANNELS)
   {
     ppm[CURRENT_CHANNEL] = time;
-  }
 
-  ++CURRENT_CHANNEL;
+    if (CURRENT_CHANNEL < (NUM_CHANNELS - 1))
+    {
+      ++CURRENT_CHANNEL;
+    }
+  }
+  else
+  {
+    CURRENT_CHANNEL = 0;
+  }
 
   return pulse_width + TIMEOUT_INTERVAL;
 }
