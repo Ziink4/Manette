@@ -115,16 +115,17 @@ int main(void)
   {
     LL_IWDG_ReloadCounter(IWDG);
 
+#if 0 // TEST BUTTON
     const bool button_pressed = LL_GPIO_IsInputPinSet(BUT_GPIO_Port, BUT_Pin);
-    const bool timer_enabled = LL_TIM_IsEnabledCounter(TIM1);
-    if (button_pressed && timer_enabled)
+    if (button_pressed)
     {
-      //LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
+      LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
     }
     else
     {
-      //LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
+      LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
     }
+#endif
 
     // usbPoll();
 
@@ -136,15 +137,16 @@ int main(void)
       {
         const uint8_t channel_value = PPM_GetChannel(i);
 
-        // Test condition
-        if (i == 1 && channel_value > 127)
+#if 1 // TEST CHANNEL
+        if (i == 2 && channel_value > 127)
         {
           LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
         }
-        else if (i == 1 && channel_value <= 127)
+        else if (i == 2 && channel_value <= 127)
         {
           LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
         }
+#endif
 
         if (report_buffer[i] != channel_value)
         {
