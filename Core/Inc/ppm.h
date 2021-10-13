@@ -14,9 +14,9 @@ extern "C" {
 
 extern volatile char PPM_NEW_DATA;
 
-void PPM_Init();
+void PPM_Init(unsigned int timer_freq);
 
-unsigned char PPM_GetChannel(int channel);
+unsigned char PPM_GetChannel(unsigned int channel);
 
 void PPM_TimeoutHandler();
 

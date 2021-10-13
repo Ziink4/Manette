@@ -12,34 +12,48 @@
 #define NUM_CHANNELS 8
 volatile unsigned int ppm[NUM_CHANNELS];
 
-volatile int currentChannel = -1;
-
-#define T_MIN (1*F_CPU/1000) // 1ms = 12000 Ticks @ 12Mhz = Stick min position
-#define T_MAX (2*F_CPU/1000) // 2ms = 24000 Ticks @ 12Mhz = Stick max position
-#define T_OUT (3*F_CPU/1000) // 3ms = 36000 Ticks @ 12Mhz = Timeout
+volatile int CURRENT_CHANNEL = -1;
 
 volatile char PPM_NEW_DATA;
 volatile unsigned int TIME_OLD;
 
-void PPM_Init()
+unsigned int T_MIN = 0;
+unsigned int T_MAX = 0;
+unsigned int T_OUT = 0;
+
+void PPM_Init(unsigned int timer_freq)
 {
   PPM_NEW_DATA = 0;
-  currentChannel = -1;
+  CURRENT_CHANNEL = -1;
+
+  T_MIN = (1 * timer_freq / 1000); // 1ms = Stick min position
+  T_MAX = (2 * timer_freq / 1000); // 2ms = Stick max position
+  T_OUT = (3 * timer_freq / 1000); // 3ms = Timeout
 }
 
-unsigned char PPM_GetChannel(int channel)
+unsigned char PPM_GetChannel(unsigned int channel)
 {
-  return 0;
+  unsigned int t = ppm[channel];
+
+  // Convert T_MIN...T_MAX -> 0...255
+  if (t < T_MIN) t = T_MIN;
+
+  t -= T_MIN;
+  t /= ((T_MAX - T_MIN) / 255);
+
+  if (t > 255) t = 255;
+
+  return ((unsigned char)t);
 }
 
 void PPM_TimeoutHandler()
 {
-  if (currentChannel != -1)
+  if (CURRENT_CHANNEL != -1)
   {
     PPM_NEW_DATA = 1;
   }
 
-  currentChannel = -1;
+  CURRENT_CHANNEL = -1;
 }
 
 void PPM_PulseHandler()
@@ -60,5 +74,5 @@ void PPM_PulseHandler()
 //    ppm[currentChannel]=time;
 //  }
 
-  ++currentChannel;
+  ++CURRENT_CHANNEL;
 }
