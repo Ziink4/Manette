@@ -39,12 +39,18 @@ unsigned char PPM_GetChannel(unsigned int channel)
   uint32_t t = ppm[channel];
 
   // Convert MINIMAL_INTERVAL...MAXIMAL_INTERVAL -> 0...255
-  if (t < MINIMAL_INTERVAL) t = MINIMAL_INTERVAL;
+  if (t < MINIMAL_INTERVAL)
+  {
+    t = MINIMAL_INTERVAL;
+  }
 
   t -= MINIMAL_INTERVAL;
   t /= (MAXIMAL_INTERVAL - MINIMAL_INTERVAL) / 255;
 
-  if (t > 255) t = 255;
+  if (t > 255)
+  {
+    t = 255;
+  }
 
   return ((unsigned char)t);
 }
