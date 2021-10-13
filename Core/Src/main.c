@@ -93,7 +93,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   const uint32_t prescaler = LL_TIM_GetPrescaler(TIM1);
-  const uint32_t clock = 48000000 / prescaler;
+  const uint32_t clock = 48000000 / (prescaler + 1);
   PPM_Init(clock);
 
   static uint8_t report_buffer[8];
