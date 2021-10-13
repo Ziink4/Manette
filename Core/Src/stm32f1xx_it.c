@@ -220,6 +220,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
 void TIM1_UP_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_UP_IRQn 0 */
+  LL_TIM_ClearFlag_UPDATE(TIM1);
   PPM_TimeoutHandler();
   /* USER CODE END TIM1_UP_IRQn 0 */
   /* USER CODE BEGIN TIM1_UP_IRQn 1 */
@@ -233,7 +234,12 @@ void TIM1_UP_IRQHandler(void)
 void TIM1_CC_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_CC_IRQn 0 */
-  PPM_PulseHandler();
+  LL_TIM_ClearFlag_CC1(TIM1);
+
+  const uint32_t capture = LL_TIM_IC_GetCaptureCH1(TIM1);
+  const uint32_t new_reload = PPM_PulseHandler(capture);
+
+  LL_TIM_SetAutoReload(TIM1, new_reload);
   /* USER CODE END TIM1_CC_IRQn 0 */
   /* USER CODE BEGIN TIM1_CC_IRQn 1 */
 

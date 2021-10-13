@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ppm.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +92,21 @@ int main(void)
   MX_IWDG_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+  const uint32_t prescaler = LL_TIM_GetPrescaler(TIM1);
+  const uint32_t clock = 48000000 / prescaler;
+  PPM_Init(clock);
 
+  static uint8_t report_buffer[8];
+  static uint8_t idle_rate;  /* repeat rate for keyboards, never used for mice */
+
+  bool changed = false;
+  PPM_NEW_DATA = true;
+
+  // Start the timer
+  LL_TIM_CC_EnableChannel(TIM1, LL_TIM_CHANNEL_CH1);
+  LL_TIM_EnableIT_CC1(TIM1);
+  LL_TIM_EnableIT_UPDATE(TIM1);
+  LL_TIM_EnableCounter(TIM1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,13 +114,54 @@ int main(void)
   while (1)
   {
     LL_IWDG_ReloadCounter(IWDG);
-    if(LL_GPIO_IsInputPinSet(BUT_GPIO_Port, BUT_Pin))
+
+    const bool button_pressed = LL_GPIO_IsInputPinSet(BUT_GPIO_Port, BUT_Pin);
+    const bool timer_enabled = LL_TIM_IsEnabledCounter(TIM1);
+    if (button_pressed && timer_enabled)
     {
-      LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
+      //LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
     }
     else
     {
-      LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
+      //LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
+    }
+
+    // usbPoll();
+
+    if (PPM_NEW_DATA)
+    {
+      PPM_NEW_DATA = false;
+
+      for (int i = 0; i < sizeof(report_buffer); ++i)
+      {
+        const uint8_t channel_value = PPM_GetChannel(i);
+
+        // Test condition
+        if (i == 1 && channel_value > 127)
+        {
+          LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
+        }
+        else if (i == 1 && channel_value <= 127)
+        {
+          LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
+        }
+
+        if (report_buffer[i] != channel_value)
+        {
+          report_buffer[i] = channel_value;
+          changed = true;
+        }
+      }
+      if (changed)
+      {
+        //if(usbInterruptIsReady())
+        //{
+          changed = false;
+          // called after every poll of the interrupt endpoint
+        //  usbSetInterrupt((void *)&reportBuffer, sizeof(reportBuffer));
+        //}
+
+      }
     }
 
     /* USER CODE END WHILE */
