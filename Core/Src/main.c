@@ -98,17 +98,14 @@ int main(void)
   const uint32_t clock = 48000000 / (prescaler + 1);
   PPM_Init(clock);
 
-  static uint8_t report_buffer[8];
-  // static uint8_t usb_status;
-
   // Start the timer
   LL_TIM_CC_EnableChannel(TIM1, LL_TIM_CHANNEL_CH1);
   LL_TIM_EnableIT_CC1(TIM1);
   LL_TIM_EnableIT_UPDATE(TIM1);
   LL_TIM_EnableCounter(TIM1);
 
-  bool changed = false;
-  PPM_NEW_DATA = true;
+  uint8_t report_buffer[8];
+  bool report_changed = false;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -151,13 +148,17 @@ int main(void)
         if (report_buffer[i] != channel_value)
         {
           report_buffer[i] = channel_value;
-          changed = true;
+          report_changed = true;
         }
       }
-      if (changed)
+
+      if (report_changed)
       {
-          changed = false;
-          //usb_status = USBD_CUSTOM_HID_SendReport_FS(report_buffer, sizeof(report_buffer));
+        //const int8_t status = USBD_CUSTOM_HID_SendReport_FS(REPORT_BUFFER, 8);
+        //if (status == USBD_OK)
+        {
+          report_changed = false;
+        }
       }
     }
 
