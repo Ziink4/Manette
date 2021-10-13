@@ -76,6 +76,8 @@ void Error_Handler(void);
 #define PPM_GPIO_Port GPIOA
 #define BUT_Pin LL_GPIO_PIN_8
 #define BUT_GPIO_Port GPIOB
+#define DISC_Pin LL_GPIO_PIN_9
+#define DISC_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
