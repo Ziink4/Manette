@@ -1,8 +1,9 @@
 #MicroXplorer Configuration settings - do not modify
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
-IWDG.IPParameters=Prescaler
+IWDG.IPParameters=Prescaler,Reload
 IWDG.Prescaler=IWDG_PRESCALER_8
+IWDG.Reload=4095
 KeepUserPlacement=false
 Mcu.Family=STM32F1
 Mcu.IP0=IWDG
@@ -47,6 +48,8 @@ NVIC.PendSV_IRQn=true\:0\:0\:false\:false\:true\:false\:false
 NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4
 NVIC.SVCall_IRQn=true\:0\:0\:false\:false\:true\:false\:false
 NVIC.SysTick_IRQn=true\:0\:0\:false\:false\:true\:false\:true
+NVIC.TIM1_CC_IRQn=true\:0\:0\:false\:false\:true\:true\:true
+NVIC.TIM1_UP_IRQn=true\:0\:0\:false\:false\:true\:true\:true
 NVIC.USB_LP_CAN1_RX0_IRQn=true\:0\:0\:false\:false\:true\:false\:true
 NVIC.UsageFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false
 PA11.Mode=Device
