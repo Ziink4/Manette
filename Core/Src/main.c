@@ -26,6 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "usbd_custom_hid_if.h"
 #include "ppm.h"
 /* USER CODE END Includes */
 
@@ -92,21 +93,22 @@ int main(void)
   MX_IWDG_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+  // Setup PPM module
   const uint32_t prescaler = LL_TIM_GetPrescaler(TIM1);
   const uint32_t clock = 48000000 / (prescaler + 1);
   PPM_Init(clock);
 
   static uint8_t report_buffer[8];
-  static uint8_t idle_rate;  /* repeat rate for keyboards, never used for mice */
-
-  bool changed = false;
-  PPM_NEW_DATA = true;
+  // static uint8_t usb_status;
 
   // Start the timer
   LL_TIM_CC_EnableChannel(TIM1, LL_TIM_CHANNEL_CH1);
   LL_TIM_EnableIT_CC1(TIM1);
   LL_TIM_EnableIT_UPDATE(TIM1);
   LL_TIM_EnableCounter(TIM1);
+
+  bool changed = false;
+  PPM_NEW_DATA = true;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,8 +128,6 @@ int main(void)
       LL_GPIO_ResetOutputPin(D1_GPIO_Port, D1_Pin);
     }
 #endif
-
-    // usbPoll();
 
     if (PPM_NEW_DATA)
     {
@@ -156,13 +156,8 @@ int main(void)
       }
       if (changed)
       {
-        //if(usbInterruptIsReady())
-        //{
           changed = false;
-          // called after every poll of the interrupt endpoint
-        //  usbSetInterrupt((void *)&reportBuffer, sizeof(reportBuffer));
-        //}
-
+          //usb_status = USBD_CUSTOM_HID_SendReport_FS(report_buffer, sizeof(report_buffer));
       }
     }
 
