@@ -92,31 +92,32 @@
 __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DESC_SIZE] __ALIGN_END =
 {
   /* USER CODE BEGIN 0 */
-  0x05, 0x01, // USAGE_PAGE (Generic Desktop)
-  0x15, 0x00, // LOGICAL_MINIMUM (0)
-  0x26, 0xff, 0x00,  // LOGICAL_MAXIMUM (255)
-  0x75, 0x08, // REPORT_SIZE (6)
-  0x09, 0x04, // USAGE (Joystick)
-  0xa1, 0x01, // COLLECTION (Application)
-  0x09, 0x01, //  USAGE (Pointer)
-  0xa1, 0x00, //  COLLECTION (Physical)
-  0x09, 0x30, // USAGE (X)
-  0x09, 0x31, // USAGE (Y)
-  0x95, 0x02, // REPORT_COUNT (2)
-  0x81, 0x82, // INPUT (Data,Var,Abs,Vol)
-  0xc0, //  END_COLLECTION
-  0xa1, 0x00, //  COLLECTION (Physical)
-  0x09, 0x32, // USAGE (Z)
-  0x09, 0x33, // USAGE (Rx)
-  0x95, 0x02, // REPORT_COUNT (2)
-  0x81, 0x82, // INPUT (Data,Var,Abs,Vol)
-  0xc0, //  END_COLLECTION
-  0x09, 0x34, //  USAGE (Ry)
-  0x09, 0x35, //  USAGE (Rz)
-  0x09, 0x36, //  USAGE (Slider)
-  0x09, 0x37, //  USAGE (Dial)
-  0x95, 0x04, //  REPORT_COUNT (2)
-  0x81, 0x82, //  INPUT (Data,Var,Abs,Vol)
+  0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+  0x09, 0x04,                    // USAGE (Joystick)
+  0x15, 0x00,                    // LOGICAL_MINIMUM (0)
+  0x26, 0xff, 0x00,              // LOGICAL_MAXIMUM (255)
+  0x75, 0x08,                    // REPORT_SIZE (8)
+  0xa1, 0x01,                    // COLLECTION (Application)
+  0x09, 0x01,                    //   USAGE (Pointer)
+  0xa1, 0x00,                    //   COLLECTION (Physical)
+  0x09, 0x30,                    //     USAGE (X)
+  0x09, 0x31,                    //     USAGE (Y)
+  0x95, 0x02,                    //     REPORT_COUNT (2)
+  0x81, 0x82,                    //     INPUT (Data,Var,Abs,Vol)
+  0xc0,                          //   END_COLLECTION
+  0x05, 0x02,                    //   USAGE_PAGE (Simulation Controls)
+  0xa1, 0x00,                    //   COLLECTION (Physical)
+  0x09, 0xbb,                    //     USAGE (Throttle)
+  0x09, 0xba,                    //     USAGE (Rudder)
+  0x95, 0x02,                    //     REPORT_COUNT (2)
+  0x81, 0x82,                    //     INPUT (Data,Var,Abs,Vol)
+  0xc0,                          //   END_COLLECTION
+  0x05, 0x09,                    //   USAGE_PAGE (Button)
+  0x19, 0x01,                    //   USAGE_MINIMUM (Button 1)
+  0x29, 0x04,                    //   USAGE_MAXIMUM (Button 4)
+  0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+  0x95, 0x04,                    //   REPORT_COUNT (4)
+  0x81, 0xa2,                    //   INPUT (Data,Var,Abs,NPrf,Vol)
   /* USER CODE END 0 */
   0xC0    /*     END_COLLECTION	             */
 };

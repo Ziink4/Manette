@@ -132,8 +132,19 @@ int main(void)
 
       for (int i = 0; i < sizeof(report_buffer); ++i)
       {
-        const uint8_t channel_value = PPM_GetChannel(i);
+        uint8_t channel_value = PPM_GetChannel(i);
 
+        if (i > 3)
+        {
+          if (channel_value > 127)
+          {
+            channel_value = 1;
+          }
+          else
+          {
+            channel_value = 0;
+          }
+        }
 #if 1 // TEST CHANNEL
         if (i == 2 && channel_value > 127)
         {
