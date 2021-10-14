@@ -154,8 +154,8 @@ int main(void)
 
       if (report_changed)
       {
-        //const int8_t status = USBD_CUSTOM_HID_SendReport_FS(REPORT_BUFFER, 8);
-        //if (status == USBD_OK)
+        const int8_t status = USBD_CUSTOM_HID_SendReport_FS(report_buffer, sizeof(report_buffer));
+        if (status == USBD_OK)
         {
           report_changed = false;
         }
