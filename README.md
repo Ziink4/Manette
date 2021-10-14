@@ -13,4 +13,4 @@ Tested working on Windows 10, with a Futaba 6-channel remote.
 
 ## Credits
 - [thomaspfeifer/PPM2USB](https://github.com/thomaspfeifer/PPM2USB) and his [blog](http://thomaspfeifer.net/ppm2usb_adapter_en.htm).
-- [Smeat/ppm2usb](https://github.com/Smeat/ppm2usb)
+- [Smeat/ppm2usb](https://github.com/Smeat/ppm2usb).
