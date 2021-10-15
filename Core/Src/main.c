@@ -104,7 +104,9 @@ int main(void)
   LL_TIM_EnableIT_UPDATE(TIM1);
   LL_TIM_EnableCounter(TIM1);
 
-  uint8_t report_buffer[8];
+  // Current report contains X, Y, Throttle, Rudder as 8-bit outputs,
+  // 4 buttons as 1-bit outputs and 4 constant 1-bit outputs for alignment
+  uint8_t report_buffer[5] = {0};
   bool report_changed = false;
   /* USER CODE END 2 */
 
@@ -130,22 +132,11 @@ int main(void)
     {
       PPM_NEW_DATA = false;
 
-      for (int i = 0; i < sizeof(report_buffer); ++i)
+      for (int i = 0; i < 8; ++i)
       {
-        uint8_t channel_value = PPM_GetChannel(i);
+        const uint8_t channel_value = PPM_GetChannel(i);
 
-        if (i > 3)
-        {
-          if (channel_value > 127)
-          {
-            channel_value = 1;
-          }
-          else
-          {
-            channel_value = 0;
-          }
-        }
-#if 1 // TEST CHANNEL
+#if 0 // TEST CHANNEL
         if (i == 2 && channel_value > 127)
         {
           LL_GPIO_SetOutputPin(D1_GPIO_Port, D1_Pin);
@@ -156,7 +147,30 @@ int main(void)
         }
 #endif
 
-        if (report_buffer[i] != channel_value)
+        // For the last 4 channels (8-bit -> 1-bit)
+        if (i >= 4)
+        {
+          const int but_report_index = 4;
+          const int but_mask_index = i - 4;
+          const uint8_t bit_mask = (1 << but_mask_index);
+
+          // Get i-th bit
+          const uint8_t current_value = report_buffer[but_report_index] & bit_mask;
+
+          // Compute the new i-th bit
+          const uint8_t but_value = (channel_value < 127) << but_mask_index;
+
+          // Compare current vs. new
+          if (current_value != but_value)
+          {
+            // set/reset only the correct bit
+            report_buffer[but_report_index] &= ~bit_mask;
+            report_buffer[but_report_index] |= but_value;
+            report_changed = true;
+          }
+        }
+        // For the first 4 channels (8-bit each)
+        else if (report_buffer[i] != channel_value)
         {
           report_buffer[i] = channel_value;
           report_changed = true;
