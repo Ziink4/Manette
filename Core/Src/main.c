@@ -132,7 +132,7 @@ int main(void)
     {
       PPM_NEW_DATA = false;
 
-      for (int i = 0; i < 8; ++i)
+      for (uint8_t i = 0; i < 8; ++i)
       {
         const uint8_t channel_value = PPM_GetChannel(i);
 
@@ -150,8 +150,8 @@ int main(void)
         // For the last 4 channels (8-bit -> 1-bit)
         if (i >= 4)
         {
-          const int but_report_index = 4;
-          const int but_mask_index = i - 4;
+          const uint8_t but_report_index = 4;
+          const uint8_t but_mask_index = i - 4;
           const uint8_t bit_mask = (1 << but_mask_index);
 
           // Get i-th bit
