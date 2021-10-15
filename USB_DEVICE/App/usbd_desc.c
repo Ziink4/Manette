@@ -72,6 +72,14 @@
 #define USBD_INTERFACE_STRING_FS     "Custom HID Interface"
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
+#undef USBD_VID
+#undef USBD_LANGID_STRING
+#undef USBD_MANUFACTURER_STRING
+#undef USBD_PID_FS
+#undef USBD_PRODUCT_STRING_FS
+#undef USBD_CONFIGURATION_STRING_FS
+#undef USBD_INTERFACE_STRING_FS
+
 #define USBD_VID                     0x1489
 #define USBD_LANGID_STRING           1036 // French - France
 #define USBD_MANUFACTURER_STRING     "Ziink4"
