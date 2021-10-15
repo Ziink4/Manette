@@ -148,17 +148,18 @@ int main(void)
 #endif
 
         // For the last 4 channels (8-bit -> 1-bit)
-        if (i >= 4)
+        const uint8_t but_report_index = 4;
+        if (i >= but_report_index)
         {
-          const uint8_t but_report_index = 4;
-          const uint8_t but_mask_index = i - 4;
+          const uint8_t but_mask_index = i - but_report_index;
           const uint8_t bit_mask = (1 << but_mask_index);
 
           // Get i-th bit
           const uint8_t current_value = report_buffer[but_report_index] & bit_mask;
 
           // Compute the new i-th bit
-          const uint8_t but_value = (channel_value < 127) << but_mask_index;
+          const uint8_t but_pressed = (channel_value < 127);
+          const uint8_t but_value = but_pressed << but_mask_index;
 
           // Compare current vs. new
           if (current_value != but_value)
@@ -179,7 +180,7 @@ int main(void)
 
       if (report_changed)
       {
-        const int8_t status = USBD_CUSTOM_HID_SendReport_FS(report_buffer, sizeof(report_buffer));
+        const uint8_t status = USBD_CUSTOM_HID_SendReport_FS(report_buffer, sizeof(report_buffer));
         if (status == USBD_OK)
         {
           report_changed = false;
