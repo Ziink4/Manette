@@ -2,5 +2,6 @@
 .project
 .mxproject
 .settings/
-Debug/
 *.launch
+Debug/
+Release/
